@@ -49,7 +49,7 @@ import VideoCall from "./VideoCall";
 
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare, gptAnswer, chatBotId;
-const API_KEY = "sk-proj-9nDPz3IDHVfelg4NtTgvT3BlbkFJEtid2E6YXSiTcKjK3YKX";
+const API_KEY = "";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
