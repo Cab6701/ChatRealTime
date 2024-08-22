@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  background-image: url("./background.png");
+  background-position: center;
+  background-size: cover;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.281);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.title-center{
+  display: flex;
+  justify-content: center;
+}
+.flex{
+  display: flex;
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-center-profile{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;        
+}
+
+.mychat-box{
+  padding-bottom: 3;
+}
+
+.css-19ybpb4{
+  padding: 8px !important;
+}
