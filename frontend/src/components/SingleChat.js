@@ -49,7 +49,6 @@ import VideoCall from "./VideoCall";
 
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare, gptAnswer, chatBotId;
-const API_KEY = "";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
@@ -270,7 +269,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: "Bearer " + API_KEY,
+          Authorization: "Bearer " + "API_KEY",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(apiRequestBody),
