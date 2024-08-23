@@ -5,7 +5,6 @@ import {
     useMeeting,
     useParticipant,
 } from "@videosdk.live/react-sdk";
-import { createMeeting } from "../components/ChatVideoLogic/VideoLogic";
 import ReactPlayer from "react-player";
 import { Button, Input } from "@chakra-ui/react";
 import MicIcon from '@mui/icons-material/Mic';
@@ -125,14 +124,10 @@ function Controls() {
 
 function MeetingView(props) {
     const [joined, setJoined] = useState(null);
-    //Get the method which will be used to join the meeting.
-    //We will also get the participants list to display all participants
     const { join, participants } = useMeeting({
-        //callback for when meeting is joined successfully
         onMeetingJoined: () => {
             setJoined("JOINED");
         },
-        //callback for when meeting is left
         onMeetingLeft: () => {
             props.onMeetingLeave();
         },
@@ -175,7 +170,6 @@ function MeetingView(props) {
 function VideoCall({ user }) {
     const [meetingId, setMeetingId] = useState(null);
 
-    //Getting the meeting id by calling the api we just wrote
     const getMeetingAndToken = async (id) => {
         const config = {
             headers: {
@@ -184,12 +178,11 @@ function VideoCall({ user }) {
         };
 
         const { data } = await axios.get(`/api/chatvideo/get-token`, config);
-        const meetingId =
-            id == null ? await createMeeting({ token: data.token }) : id;
+        const token = data.token;
+        const meetingId = id == null ? await axios.post(`/api/chatvideo/create-meeting`, { token }, config) : id;
         setMeetingId(meetingId);
     };
 
-    //This will set Meeting Id to null when meeting is left or ended
     const onMeetingLeave = () => {
         setMeetingId(null);
     };
@@ -201,6 +194,7 @@ function VideoCall({ user }) {
                 micEnabled: true,
                 webcamEnabled: true,
                 name: user.name,
+                joinWithoutUserInteraction: true
             }}
             token={meetingId}
         >

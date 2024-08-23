@@ -9,6 +9,7 @@
     "@chakra-ui/toast": "^7.0.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@google/generative-ai": "^0.17.1",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",

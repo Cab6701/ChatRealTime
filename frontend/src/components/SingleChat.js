@@ -46,7 +46,6 @@ import ChatLoading from "./ChatLoading";
 import MessageListItem from "./UserAvatar/MessageListItem";
 import AddFriendPopup from "./AddFriendPopup";
 import VideoCall from "./VideoCall";
-
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare, gptAnswer, chatBotId;
 
@@ -118,17 +117,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
-    // const getChatBotId = async () => {
-    //   const config = {
-    //     headers: {
-    //       "Content-type": "application/json",
-    //       Authorization: `Bearer ${user.token}`,
-    //     },
-    //   };
-    //   const response = await axios.get("/api/user?search=ChatBot", config);
-    //   chatBotId = response.data[0];
-    // };
-    // getChatBotId();
+    const getChatBotId = async () => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const response = await axios.get("/api/user?search=ChatBot", config);
+      chatBotId = response.data[0];
+    };
+    getChatBotId();
   });
 
   useEffect(() => {
@@ -209,7 +208,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
-        console.log(data);
         socket.emit("new message", data);
         setButtonSend(false);
         setNewMessageData(data);
@@ -232,7 +230,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         newMessageData &&
         newMessageData.chat.users.find((u) => u.name === "ChatBot")
       ) {
-        await callChatBot([...messages, newMessageData]);
+        await callChatBot(newMessageData);
       }
     };
     callChatBotIfNeeded();
@@ -241,47 +239,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [newMessageData]);
 
   const callChatBot = async (chatMessages) => {
-    console.log(chatMessages);
-    let apiMessages = Array.from(chatMessages).map((messageObject) => {
-      let role = "";
-      if (messageObject.sender === "ChatGPT") {
-        role = "assistant";
-      } else {
-        role = "user";
-      }
-      return { role: role, content: messageObject.content };
-    });
-
-    const systemMessage = {
-      role: "system",
-      content:
-        "Explain all concepts like I am 1 years of experience developer.",
-    };
-
-    console.log(apiMessages);
-
-    const apiRequestBody = {
-      model: "gpt-3.5-turbo",
-      messages: [systemMessage, ...apiMessages],
-    };
+    const { GoogleGenerativeAI } = require("@google/generative-ai");
+    const genAI = new GoogleGenerativeAI("AIzaSyDTbhnjhWiKQS_B_g6pAWdERBFd2vVaE9o");
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
     try {
-      await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + "API_KEY",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(apiRequestBody),
-      })
-        .then((data) => {
-          return data.json();
-        })
-        .then(async (data) => {
-          console.log(data);
-          gptAnswer = data.choices[0].message.content;
-          setIsSent(true);
-        });
+      const result = await model.generateContent(chatMessages.content);
+      const response = await result.response;
+      gptAnswer = response.text();
+      setIsSent(true);
     } catch (error) {
       console.log(error);
     }
@@ -479,7 +445,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             },
             config
           );
-          console.log(data);
           socket.emit("new message", data);
           setButtonSend(false);
           setNewMessageData(data);
@@ -525,7 +490,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         config
       );
       setSearchResult(data);
-      console.log(data);
     } catch (error) {
       toast({
         title: "Error Occured!",
