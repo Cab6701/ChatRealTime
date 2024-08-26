@@ -59,6 +59,7 @@ const SideDrawer = () => {
 
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure1();
   const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure2();
+  // eslint-disable-next-line 
   const [socketConnected, setSocketConnected] = useState(false);
   const cancelRef = React.useRef();
   const [friend, setFriend] = useState();
@@ -93,7 +94,6 @@ const SideDrawer = () => {
       };
 
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-      console.log(data);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -140,7 +140,6 @@ const SideDrawer = () => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
-    console.log(socketConnected);
     // eslint-disable-next-line 
   })
 
@@ -164,7 +163,7 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       }
-      const { data } = await axios.put(
+      await axios.put(
         `/api/user/addFriend`,
         {
           userId: user._id,
@@ -173,7 +172,7 @@ const SideDrawer = () => {
         config
       );
 
-      const response = await axios.put(
+      await axios.put(
         `/api/user/addFriend`,
         {
           userId: friend._id,
@@ -181,7 +180,6 @@ const SideDrawer = () => {
         },
         config
       );
-      console.log(response.data);
       socket.emit("request accepted", user, friend);
     } catch (error) {
       console.log(error);
